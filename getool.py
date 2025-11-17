@@ -8,6 +8,7 @@ to ElevenLabs Conversational AI Outbound Call API.
 import json
 import argparse
 import sys
+from clay_agent_helper import AgenticSetupHelper
 
 
 def generate_clay_webhook_input():
@@ -94,6 +95,8 @@ Examples:
   %(prog)s --output         # Generate Make.com HTTP output configuration
   %(prog)s --config         # Generate Make.com HTTP module configuration
   %(prog)s --full           # Generate complete blueprint (default)
+  %(prog)s --agent-setup    # Generate AI agent setup instructions for Clay
+  %(prog)s --agent-prompt   # Generate prompt for AI agent helper in Clay
   %(prog)s --pretty         # Output with pretty formatting
         """
     )
@@ -135,10 +138,31 @@ Examples:
         help="Compact JSON output (overrides --pretty)"
     )
     
+    parser.add_argument(
+        "--agent-setup",
+        action="store_true",
+        help="Generate AI agent setup instructions and helper code for Clay"
+    )
+    
+    parser.add_argument(
+        "--agent-prompt",
+        action="store_true",
+        help="Generate a prompt to give to an AI agent in Clay for setup assistance"
+    )
+    
     args = parser.parse_args()
     
+    # Handle agent setup options first (they output text, not JSON)
+    if args.agent_prompt:
+        helper = AgenticSetupHelper()
+        print(helper.generate_clay_ai_prompt())
+        return 0
+    
     # Determine what to generate
-    if args.input:
+    if args.agent_setup:
+        helper = AgenticSetupHelper()
+        data = helper.generate_agent_instructions()
+    elif args.input:
         data = generate_clay_webhook_input()
     elif args.output:
         data = generate_makecom_http_output()

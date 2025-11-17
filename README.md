@@ -12,6 +12,8 @@ A tool for generating JSON blueprints for Make.com scenarios that connect Clay W
 - Generate Make.com HTTP module output configuration
 - Generate complete Make.com HTTP module configuration with headers
 - Generate full blueprint with setup instructions
+- **NEW: AI Agent Setup Assistant** - Get instructions and code for AI agents in Clay to automate setup
+- **NEW: Interactive Setup** - Guided configuration with validation
 - Pretty-printed or compact JSON output
 - Command-line interface for easy integration with scripts
 
@@ -90,6 +92,40 @@ This generates a complete blueprint including:
 - Variable mapping documentation
 - Step-by-step setup instructions
 
+### Generate AI Agent Setup Instructions (NEW!)
+
+Get structured instructions that can be used by AI agents in Clay to set up the integration:
+
+```bash
+getool --agent-setup
+```
+
+This outputs a comprehensive JSON structure that AI agents can parse and use to guide users through setup.
+
+### Generate AI Agent Prompt (NEW!)
+
+Get a ready-to-use prompt that you can give to an AI agent helper in Clay:
+
+```bash
+getool --agent-prompt
+```
+
+Copy the output and paste it into your AI agent in Clay. The AI will understand how to help you set up the integration step-by-step.
+
+### Interactive Setup (NEW!)
+
+Run the interactive setup script to configure your integration with validation:
+
+```bash
+python3 clay_agent_helper.py
+```
+
+The script will:
+1. Prompt you for your ElevenLabs API key, Agent ID, and Phone Number ID
+2. Validate your inputs
+3. Generate a complete configuration file at `/tmp/makecom_elevenlabs_config.json`
+4. Provide next steps for completing the setup
+
 ### Output Options
 
 - `--pretty`: Pretty-print JSON (default)
@@ -107,6 +143,47 @@ The tool generates JSON configurations based on the requirements specified in `a
 1. **Webhook Module (Trigger)**: Listens for HTTP POST requests from Clay containing prospect data
 2. **HTTP Module (Action)**: Makes authenticated API calls to ElevenLabs with personalized variables
 3. **Variable Mapping**: Maps Clay webhook data to ElevenLabs custom variables for call personalization
+
+## Agentic Setup (NEW!)
+
+The new **Clay AI Agent Helper** provides an intelligent setup assistant that can be used by AI agents in Clay or run interactively:
+
+### For AI Agents in Clay
+
+1. Generate the AI prompt:
+   ```bash
+   getool --agent-prompt
+   ```
+
+2. Copy the output and paste it into your AI agent in Clay
+
+3. The AI will guide you through:
+   - Collecting your credentials
+   - Setting up the Make.com scenario
+   - Configuring the webhook and HTTP modules
+   - Testing the integration
+
+### For Interactive Setup
+
+Run the helper script directly:
+```bash
+python3 clay_agent_helper.py
+```
+
+The script collects your credentials, validates them, and generates a complete configuration file.
+
+### For Developers
+
+Use the Python API to build custom automation:
+```python
+from clay_agent_helper import AgenticSetupHelper
+
+helper = AgenticSetupHelper()
+instructions = helper.generate_agent_instructions()
+config = helper.get_complete_setup_config(api_key, agent_id, phone_id)
+```
+
+See [CLAY_AGENT_SETUP.md](CLAY_AGENT_SETUP.md) for detailed documentation on the agentic setup features.
 
 ## API Integration Details
 
@@ -133,12 +210,16 @@ python3 getool.py --output
 
 ```
 getool/
-├── getool.py           # Main CLI tool
-├── setup.py            # Package setup configuration
-├── requirements.txt    # Python dependencies (empty - uses stdlib only)
-├── README.md           # This file
-├── agentinstructions.md # Original requirements specification
-└── .gitignore          # Git ignore patterns
+├── getool.py                  # Main CLI tool
+├── clay_agent_helper.py       # NEW: Agentic setup assistant
+├── setup.py                   # Package setup configuration
+├── requirements.txt           # Python dependencies (empty - uses stdlib only)
+├── README.md                  # This file
+├── CLAY_AGENT_SETUP.md        # NEW: Agentic setup documentation
+├── agentinstructions.md       # Original requirements specification
+├── test_getool.py             # Tests for main tool
+├── test_clay_agent_helper.py  # NEW: Tests for agentic setup
+└── .gitignore                 # Git ignore patterns
 ```
 
 ## Contributing

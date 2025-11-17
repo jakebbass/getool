@@ -200,6 +200,47 @@ class TestGetool(unittest.TestCase):
             sys.stdout = old_stdout
             sys.argv = old_argv
 
+    def test_cli_agent_setup_option(self):
+        """Test CLI with --agent-setup option."""
+        old_stdout = sys.stdout
+        sys.stdout = StringIO()
+        old_argv = sys.argv
+        sys.argv = ['getool', '--agent-setup']
+        
+        try:
+            result = main()
+            output = sys.stdout.getvalue()
+            self.assertEqual(result, 0)
+            
+            # Parse JSON output
+            data = json.loads(output)
+            self.assertIn("setup_type", data)
+            self.assertIn("required_information", data)
+            self.assertIn("setup_steps", data)
+        finally:
+            sys.stdout = old_stdout
+            sys.argv = old_argv
+
+    def test_cli_agent_prompt_option(self):
+        """Test CLI with --agent-prompt option."""
+        old_stdout = sys.stdout
+        sys.stdout = StringIO()
+        old_argv = sys.argv
+        sys.argv = ['getool', '--agent-prompt']
+        
+        try:
+            result = main()
+            output = sys.stdout.getvalue()
+            self.assertEqual(result, 0)
+            
+            # Check for text output (not JSON)
+            self.assertIn("Clay", output)
+            self.assertIn("Make.com", output)
+            self.assertIn("ElevenLabs", output)
+        finally:
+            sys.stdout = old_stdout
+            sys.argv = old_argv
+
 
 if __name__ == '__main__':
     unittest.main()
