@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jakebbass/getool",
-    py_modules=["getool"],
+    py_modules=["getool", "clay_agent_helper"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
